@@ -1,7 +1,10 @@
 import com.sandeep.beans.Account;
+import com.sandeep.beans.Transaction;
 import com.sandeep.exceptions.AccountNotFoundException;
 import com.sandeep.service.AccountService;
 import com.sandeep.service.AccountServiceImpl;
+import com.sandeep.service.TransactionService;
+import com.sandeep.service.TransactionServiceImpl;
 import com.sandeep.utils.EMICalculator;
 
 // import java.sql.SQLOutput;
@@ -12,6 +15,7 @@ public class Main {
     public static void main(String[] args) throws AccountNotFoundException {
         boolean flag = true;
         AccountService bankServices = new AccountServiceImpl();
+        TransactionService transactionService = new TransactionServiceImpl();
         System.out.println("Kindly chose your option ");
         while (flag) {
             System.out.println("Please chose an option: ");
@@ -21,8 +25,9 @@ public class Main {
             System.out.println("4. Make Transaction between 2 accounts");
             System.out.println("5. Get Account Details");
             System.out.println("6. Show all accounts");
-            System.out.println("7. Calculate EMI");
-            System.out.println("8. Exit");
+            System.out.println("7. Show all Transactions");
+            System.out.println("8. Calculate EMI");
+            System.out.println("9. Exit");
             Scanner sc = new Scanner(System.in);
             int switchKey = sc.nextInt();
             switch (switchKey) {
@@ -60,7 +65,7 @@ public class Main {
                     int withAmount = sc.nextInt();
                     System.out.println("Enter your pin number");
                     int pinNo = sc.nextInt();
-                    Account account = bankServices.getAmount(acc2, withAmount, pinNo);
+                    Account account = bankServices.getAmount(acc2, pinNo, withAmount);
 
                     if (account == null) {
                         System.out.println("Invalid operation");
@@ -115,6 +120,20 @@ public class Main {
                     break;
 
                 case 7:
+                    System.out.println("******ALL TRANSACTIONS*******");
+                    for (Map.Entry<UUID, Transaction> transactionRecord : transactionService.getAllTransactions()
+                            .entrySet()) {
+                        System.out.println("Transaction Id : " + transactionRecord.getValue().getTxId());
+                        System.out.println("Transaction Type : " + transactionRecord.getValue().getTxType());
+                        System.out.println("TimeStamp : " + transactionRecord.getValue().getTxTimestamp());
+                        System.out.println("Transaction Amount : " + transactionRecord.getValue().getAmount());
+                        System.out.println("Sender Account Number : " + transactionRecord.getValue().getSender());
+                        System.out.println("Reciever Account Number : " + transactionRecord.getValue().getReciever());
+                        System.out.println("****************************************************************");
+                    }
+                    break;
+
+                case 8:
                     System.out.println("******CALCULATE EMI*******");
                     System.out.println("Enter total loan amount");
                     int totalAmount = sc.nextInt();
@@ -124,7 +143,7 @@ public class Main {
                     System.out.println("EMI = :" + emiAmount);
                     break;
 
-                case 8:
+                case 9:
                     flag = false;
                     break;
 

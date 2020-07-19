@@ -4,10 +4,15 @@ import com.sandeep.DAO.AccountDAO;
 import com.sandeep.DAO.AccountDAOImpl;
 import com.sandeep.beans.Account;
 import com.sandeep.exceptions.AccountNotFoundException;
+import com.sandeep.beans.Transaction;
+import com.sandeep.service.TransactionService;
+import com.sandeep.service.TransactionServiceImpl;
 
 import java.util.HashMap;
 
 public class AccountServiceImpl implements AccountService {
+
+    TransactionService transactionService = new TransactionServiceImpl();
 
     AccountDAO accountDAO = new AccountDAOImpl();
 
@@ -37,6 +42,7 @@ public class AccountServiceImpl implements AccountService {
     public Account addAmount(int accountNumber, int amount) throws AccountNotFoundException {
         Account account = accountDAO.getAccount(accountNumber);
         account.setCurrentBalance(account.getCurrentBalance() + amount);
+        Transaction tran = transactionService.createTransaction(accountNumber, accountNumber, amount, "DEPOSIT");
         accountDAO.updateAccount(account);
         return account;
     }
@@ -53,6 +59,8 @@ public class AccountServiceImpl implements AccountService {
                 return myaccount;
             } else {
                 myaccount.setCurrentBalance(myaccount.getCurrentBalance() - amount);
+                Transaction tran = transactionService.createTransaction(accountNumber, accountNumber, amount,
+                        "WITHDRAW");
                 return accountDAO.updateAccount(myaccount);
             }
         }
@@ -63,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
             throws AccountNotFoundException {
         Account senderAccount = getAmount(senderNum, pinNo, amount);
         Account recieverAccount = addAmount(recieverNum, amount);
-
+        Transaction tran = transactionService.createTransaction(senderNum, recieverNum, amount, "TRANSFER");
         return senderAccount;
     }
 
