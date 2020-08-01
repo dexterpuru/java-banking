@@ -2,19 +2,36 @@ package com.sandeep.service;
 
 import com.sandeep.DAO.AccountDAO;
 import com.sandeep.DAO.AccountDAOImpl;
+import com.sandeep.DAO.TransactionDAO;
+import com.sandeep.DAO.TransactionDAOImpl;
 import com.sandeep.beans.Account;
 import com.sandeep.exceptions.AccountNotFoundException;
 import com.sandeep.beans.Transaction;
-import com.sandeep.service.TransactionService;
-import com.sandeep.service.TransactionServiceImpl;
+import com.sandeep.exceptions.TransactionNotFoundException;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class AccountServiceImpl implements AccountService {
 
-    TransactionService transactionService = new TransactionServiceImpl();
-
+    TransactionDAO transactionDAO = new TransactionDAOImpl();
     AccountDAO accountDAO = new AccountDAOImpl();
+
+    @Override
+    public Transaction createTransaction(int sender, int reciever, int amount, String transactionType) {
+        return transactionDAO.createTransaction(sender, reciever, amount, transactionType);
+    }
+
+    @Override
+    public boolean deleteTransaction(UUID txId) throws TransactionNotFoundException {
+        return transactionDAO.deleteTransaction(txId);
+    }
+
+    @Override
+    public HashMap<UUID, Transaction> getAllTransactions() {
+        return transactionDAO.getAllTransactions();
+    }
+
 
     @Override
     public Account createAccount(Account account) {
@@ -42,7 +59,7 @@ public class AccountServiceImpl implements AccountService {
     public Account addAmount(int accountNumber, int amount) throws AccountNotFoundException {
         Account account = accountDAO.getAccount(accountNumber);
         account.setCurrentBalance(account.getCurrentBalance() + amount);
-        Transaction tran = transactionService.createTransaction(accountNumber, accountNumber, amount, "DEPOSIT");
+        Transaction tran = createTransaction(accountNumber, accountNumber, amount, "DEPOSIT");
         accountDAO.updateAccount(account);
         return account;
     }
@@ -59,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
                 return myaccount;
             } else {
                 myaccount.setCurrentBalance(myaccount.getCurrentBalance() - amount);
-                Transaction tran = transactionService.createTransaction(accountNumber, accountNumber, amount,
+                Transaction tran = createTransaction(accountNumber, accountNumber, amount,
                         "WITHDRAW");
                 return accountDAO.updateAccount(myaccount);
             }
@@ -71,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
             throws AccountNotFoundException {
         Account senderAccount = getAmount(senderNum, pinNo, amount);
         Account recieverAccount = addAmount(recieverNum, amount);
-        Transaction tran = transactionService.createTransaction(senderNum, recieverNum, amount, "TRANSFER");
+        Transaction tran = createTransaction(senderNum, recieverNum, amount, "TRANSFER");
         return senderAccount;
     }
 

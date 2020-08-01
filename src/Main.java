@@ -3,8 +3,7 @@ import com.sandeep.beans.Transaction;
 import com.sandeep.exceptions.AccountNotFoundException;
 import com.sandeep.service.AccountService;
 import com.sandeep.service.AccountServiceImpl;
-import com.sandeep.service.TransactionService;
-import com.sandeep.service.TransactionServiceImpl;
+
 import com.sandeep.utils.EMICalculator;
 
 // import java.sql.SQLOutput;
@@ -15,7 +14,6 @@ public class Main {
     public static void main(String[] args) throws AccountNotFoundException {
         boolean flag = true;
         AccountService bankServices = new AccountServiceImpl();
-        TransactionService transactionService = new TransactionServiceImpl();
         System.out.println("Kindly chose your option ");
         while (flag) {
             System.out.println("Please chose an option: ");
@@ -121,8 +119,9 @@ public class Main {
 
                 case 7:
                     System.out.println("******ALL TRANSACTIONS*******");
-                    for (Map.Entry<UUID, Transaction> transactionRecord : transactionService.getAllTransactions()
-                            .entrySet()) {
+                    HashMap<UUID, Transaction> abc = bankServices.getAllTransactions();
+                    Set<Map.Entry<UUID, Transaction>> bcd = abc.entrySet();
+                    for (Map.Entry<UUID, Transaction> transactionRecord : bcd) {
                         System.out.println("Transaction Id : " + transactionRecord.getValue().getTxId());
                         System.out.println("Transaction Type : " + transactionRecord.getValue().getTxType());
                         System.out.println("TimeStamp : " + transactionRecord.getValue().getTxTimestamp());

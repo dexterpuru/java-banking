@@ -1,24 +1,34 @@
 package com.sandeep.service;
 
 import com.sandeep.beans.Account;
+import com.sandeep.beans.Transaction;
 import com.sandeep.exceptions.AccountNotFoundException;
+import com.sandeep.exceptions.TransactionNotFoundException;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public interface AccountService {
-    public Account createAccount(Account account);
 
-    public Account loginAccount(int accountNumber, int pin) throws AccountNotFoundException;
+    Transaction createTransaction(int sender, int reciever, int amount, String transactionType);
 
-    public Account addAmount(int accountNumber, int amount) throws AccountNotFoundException;
+    boolean deleteTransaction(UUID txId) throws TransactionNotFoundException;
 
-    public Account getAmount(int accountNumber, int pin, int amount) throws AccountNotFoundException;
+    HashMap<UUID, Transaction> getAllTransactions();
 
-    public Account makeTransaction(int senderNum, int recieverNum, int amount, int pinNo)
+    Account createAccount(Account account);
+
+    Account loginAccount(int accountNumber, int pin) throws AccountNotFoundException;
+
+    Account addAmount(int accountNumber, int amount) throws AccountNotFoundException;
+
+    Account getAmount(int accountNumber, int pin, int amount) throws AccountNotFoundException;
+
+    Account makeTransaction(int senderNum, int recieverNum, int amount, int pinNo)
             throws AccountNotFoundException;
 
-    public boolean deleteAccount(Account account);
+    boolean deleteAccount(Account account);
 
-    public HashMap<Integer, Account> getAllAccounts();
+    HashMap<Integer, Account> getAllAccounts();
 }

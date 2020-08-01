@@ -22,6 +22,7 @@ public class TransactionDAOImpl implements TransactionDAO {
         Transaction transaction = new Transaction(txId, txTimestamp, amount, transactionType, sender, reciever);
 
         transactionHashMap.put(transaction.getTxId(), transaction);
+//        System.out.println(transactionHashMap);
         return transaction;
     }
 
@@ -42,6 +43,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     @Override
     public HashMap<UUID, Transaction> getAllTransactions() {
+//        System.out.println(transactionHashMap);
         return transactionHashMap;
     }
 

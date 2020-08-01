@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public interface TransactionDAO {
-    public Transaction createTransaction(int sender, int reciever, int amount, String transactionType);
+    Transaction createTransaction(int sender, int reciever, int amount, String transactionType);
 
-    public Transaction getTransaction(UUID txId) throws TransactionNotFoundException;
+    Transaction getTransaction(UUID txId) throws TransactionNotFoundException;
 
-    public boolean deleteTransaction(UUID txId) throws TransactionNotFoundException;
+    boolean deleteTransaction(UUID txId) throws TransactionNotFoundException;
 
-    public HashMap<UUID, Transaction> getAllTransactions();
+    HashMap<UUID, Transaction> getAllTransactions();
 }

@@ -26,7 +26,7 @@ public class AccountDAOImpl implements AccountDAO {
         if (tempAccount == null)
             throw new AccountNotFoundException("Account not found for accountNumber :" + accountNumber);
         else
-            System.out.println("Account details: " + tempAccount.toString());
+//            System.out.println("Account details: " + tempAccount.toString());
         return tempAccount;
     }
 
