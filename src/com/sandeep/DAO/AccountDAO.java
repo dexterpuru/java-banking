@@ -3,17 +3,19 @@ package com.sandeep.DAO;
 import com.sandeep.beans.Account;
 import com.sandeep.exceptions.AccountNotFoundException;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public interface AccountDAO {
-    Account createAccount(Account account);
+    Account createAccount(Account account) throws SQLException;
 
-    Account getAccount(int accountNumber) throws AccountNotFoundException;
+    List<Object> getAccount(int accountNumber) throws AccountNotFoundException, SQLException;
 
-    Account updateAccount(Account account);
+    void updateAccount(List<Object> account) throws SQLException;
 
     boolean deleteAccount(Account account);
 
-    HashMap<Integer, Account> getAllAccounts();
+    ArrayList<List<Object>> getAllAccounts() throws SQLException;
 }

@@ -5,13 +5,18 @@ import com.sandeep.service.AccountService;
 import com.sandeep.service.AccountServiceImpl;
 
 import com.sandeep.utils.EMICalculator;
+import com.sandeep.DAO.DatabaseDAOImpl;
 
 // import java.sql.SQLOutput;
+import javax.xml.crypto.Data;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws AccountNotFoundException {
+    public static void main(String[] args) throws AccountNotFoundException, SQLException {
         boolean flag = true;
         AccountService bankServices = new AccountServiceImpl();
         System.out.println("Kindly chose your option ");
@@ -51,8 +56,8 @@ public class Main {
                     int acc1 = sc.nextInt();
                     System.out.println("Enter the amount you want to deposit");
                     int depAmount = sc.nextInt();
-                    int newAmount = bankServices.addAmount(acc1, depAmount).getCurrentBalance();
-                    System.out.println("Transaction successful \nUpdated Balance  :" + newAmount);
+                    bankServices.addAmount(acc1, depAmount, 1);
+                    System.out.println("Transaction successful");
                     break;
 
                 case 3:
@@ -63,14 +68,7 @@ public class Main {
                     int withAmount = sc.nextInt();
                     System.out.println("Enter your pin number");
                     int pinNo = sc.nextInt();
-                    Account account = bankServices.getAmount(acc2, pinNo, withAmount);
-
-                    if (account == null) {
-                        System.out.println("Invalid operation");
-                    } else {
-                        int newAmount1 = account.getCurrentBalance();
-                        System.out.println("Transaction successful \nUpdated Balance:" + newAmount1);
-                    }
+                    bankServices.getAmount(acc2, pinNo, withAmount, 1);
                     break;
 
                 case 4:
@@ -84,13 +82,7 @@ public class Main {
                     System.out.println("Enter your pin number");
                     pinNo = sc.nextInt();
 
-                    Account accountSender = bankServices.makeTransaction(senderNum, recieverNum, amount, pinNo);
-                    if (accountSender == null) {
-                        System.out.println("Invalid Operation");
-                    } else {
-                        System.out.println(
-                                "Transaction is completed \nUpdated balance" + accountSender.getCurrentBalance());
-                    }
+                    bankServices.makeTransaction(senderNum, recieverNum, amount, pinNo);
                     break;
 
                 case 5:
@@ -99,35 +91,35 @@ public class Main {
                     int accNo = sc.nextInt();
                     System.out.println("Enter your pin number");
                     int pinNo1 = sc.nextInt();
-                    Account myAccount = bankServices.loginAccount(accNo, pinNo1);
+                    List<Object> myAccount = bankServices.loginAccount(accNo, pinNo1);
                     if (myAccount == null) {
                         System.out.println("******Invalid account number or pin******");
                     } else {
-                        System.out.println("Welcome to your account : " + myAccount.getAccountHolderName());
-                        System.out.println("Current balance : " + myAccount.getCurrentBalance());
+                        System.out.println("Welcome to your account : " + myAccount.get(1));
+                        System.out.println("Current balance : " + myAccount.get(2));
                     }
                     break;
                 case 6:
                     System.out.println("******ALL ACCOUNTS*******");
-                    for (Map.Entry<Integer, Account> accountEntry : bankServices.getAllAccounts().entrySet()) {
-                        System.out.println("Account number : " + accountEntry.getValue().getAccountNumber());
-                        System.out.println("Account holder name : " + accountEntry.getValue().getAccountHolderName());
-                        System.out.println("Account balance : " + accountEntry.getValue().getCurrentBalance());
+                    ArrayList<List<Object>> accounts = bankServices.getAllAccounts();
+                    for (int i=0; i<accounts.size(); i++) {
+                        System.out.println("Account number : " + accounts.get(i).get(0));
+                        System.out.println("Account holder name : " + accounts.get(i).get(1));
+                        System.out.println("Account balance : " + accounts.get(i).get(2));
                         System.out.println("****************************************************************");
                     }
                     break;
 
                 case 7:
                     System.out.println("******ALL TRANSACTIONS*******");
-                    HashMap<UUID, Transaction> abc = bankServices.getAllTransactions();
-                    Set<Map.Entry<UUID, Transaction>> bcd = abc.entrySet();
-                    for (Map.Entry<UUID, Transaction> transactionRecord : bcd) {
-                        System.out.println("Transaction Id : " + transactionRecord.getValue().getTxId());
-                        System.out.println("Transaction Type : " + transactionRecord.getValue().getTxType());
-                        System.out.println("TimeStamp : " + transactionRecord.getValue().getTxTimestamp());
-                        System.out.println("Transaction Amount : " + transactionRecord.getValue().getAmount());
-                        System.out.println("Sender Account Number : " + transactionRecord.getValue().getSender());
-                        System.out.println("Reciever Account Number : " + transactionRecord.getValue().getReciever());
+                    ArrayList<List<Object>> abc = bankServices.getAllTransactions();
+                    for (int i=0; i<abc.size(); i++) {
+                        System.out.println("Transaction Id : " + abc.get(i).get(0));
+                        System.out.println("Transaction Type : " + abc.get(i).get(2));
+                        System.out.println("TimeStamp : " + abc.get(i).get(5));
+                        System.out.println("Transaction Amount : " + abc.get(i).get(1));
+                        System.out.println("Sender Account Number : " + abc.get(i).get(3));
+                        System.out.println("Receiver Account Number : " + abc.get(i).get(4));
                         System.out.println("****************************************************************");
                     }
                     break;

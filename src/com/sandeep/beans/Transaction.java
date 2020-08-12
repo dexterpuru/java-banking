@@ -13,16 +13,16 @@ public class Transaction {
     private int amount;
     private String transactionType;
     private int sender;
-    private int reciever;
+    private int receiver;
 
     public Transaction(UUID txId, Timestamp tx_timestamp, int amount, String transactionType, int sender,
-            int reciever) {
+            int receiver) {
         this.txId = txId;
         this.tx_timestamp = tx_timestamp;
         this.amount = amount;
         this.transactionType = transactionType;
         this.sender = sender;
-        this.reciever = reciever;
+        this.receiver = receiver;
     }
 
     public UUID getTxId() {
@@ -65,11 +65,11 @@ public class Transaction {
         this.sender = sender;
     }
 
-    public int getReciever() {
-        return sender;
+    public int getReceiver() {
+        return receiver;
     }
 
-    public void setReciever(int reciever) {
-        this.reciever = reciever;
+    public void setReceiver(int receiver) {
+        this.receiver = receiver;
     }
 }
